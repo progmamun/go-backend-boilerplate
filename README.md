@@ -261,7 +261,7 @@ Authorization: Bearer YOUR_TOKEN_HERE
 
 ---
 
-- `go mod init <module-path>`
+- `go mod init <module-path>` (progmamun/go-backend-boilerplate)
 - `go mod tidy`
 - `go get github.com/joho/godotenv`
-- ``
+- `go get github.com/labstack/echo/v5`
