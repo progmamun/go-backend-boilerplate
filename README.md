@@ -265,3 +265,4 @@ Authorization: Bearer YOUR_TOKEN_HERE
 - `go mod tidy`
 - `go get github.com/joho/godotenv`
 - `go get github.com/labstack/echo/v5`
+- `air init`
