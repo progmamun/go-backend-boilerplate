@@ -266,3 +266,4 @@ Authorization: Bearer YOUR_TOKEN_HERE
 - `go get github.com/joho/godotenv`
 - `go get github.com/labstack/echo/v5`
 - `air init`
+- `go build -o bin/foldername ./cmd`
