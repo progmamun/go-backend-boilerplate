@@ -40,13 +40,13 @@ func NewJWTService(secretKey string) JWTService {
 		tokenDuration: defaultTokenDuration,
 	}
 }
+func (js *jwtService) GenerateToken(userId uint, email string, name string) (string, error) {
 
-func (js *jwtService) GenerateToken(userId uint, email string, name string)(string, error) {
 	// create claims
-	claims := JWTClaims {
+	claims := JWTClaims{
 		UserID: userId,
-		Name: name,
-		Email: email,
+		Name:   name,
+		Email:  email,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(js.tokenDuration)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
@@ -54,31 +54,33 @@ func (js *jwtService) GenerateToken(userId uint, email string, name string)(stri
 		},
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims) // create token with claims
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims) // create token with claims
 
-	tokenString, err := token.SignedString([]byte(js.secretKey)) // sign token
+	tokenString, err := token.SignedString([]byte(js.secretKey)) // sign token with secret key
 	if err != nil {
 		return "", err
 	}
 	return tokenString, nil
 }
 
-func (js *jwtService) ValidateToken(tokenStr string)(*JWTClaims, error) {
+func (js *jwtService) ValidateToken(tokenStr string) (*JWTClaims, error) {
 	token, err := jwt.ParseWithClaims(tokenStr, &JWTClaims{}, func(token *jwt.Token) (any, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC);
-		!ok {
+
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
+
 		return []byte(js.secretKey), nil
+
 	})
 
 	if err != nil {
 		return nil, fmt.Errorf("unexpected signing method: %w", err)
 	}
 
-	if claims, ok := token.Claims.(*JWTClaims);
-	ok && token.Valid{
+	if claims, ok := token.Claims.(*JWTClaims); ok && token.Valid {
 		return claims, nil
 	}
+
 	return nil, fmt.Errorf("invalid token")
 }
